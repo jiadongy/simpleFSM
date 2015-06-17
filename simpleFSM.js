@@ -113,7 +113,7 @@
                     else if(this.cannot(event.name))
                         throw "DisAllow this Method In Current State "+this.current
                     else
-                        eventExecuter(this,FSM, event,otherArguments)
+                        eventExecuter(this,FSM, event,event.to,otherArguments)
                 }catch (e){
                     FSM.error(event.name,null,null,null,null,e)
                 }
@@ -142,23 +142,23 @@
                 onenterSAll=prototype["onstate"] || prototype["onenterstate"],
                 realArguments=[name, from,to].concat(otherArguments)
             if(isFunction(onbeforeE)){
-                tmpFlag=onbeforeE(realArguments)
+                tmpFlag=onbeforeE.apply(onbeforeE,realArguments)
                 tmpFlag===false && (canContinueEvent=false)
                 tmpFlag===fsmClass.ASYNC && (useAsync=useAsync||true)
                 log("execute onBefore "+name);
             }
             if(isFunction(onbeforeEAll)){
-                onbeforeEAll(realArguments)
+                onbeforeEAll.apply(onbeforeEAll,realArguments)
                 log("execute onBeforeEvent");
             }
             if(isFunction(onleaveS)){
-                tmpFlag=onleaveS(realArguments)
+                tmpFlag=onleaveS.apply(onleaveS,realArguments)
                 tmpFlag===false && (canContinueEvent=false)
                 tmpFlag===fsmClass.ASYNC && (useAsync=useAsync||true)
                 log("execute onLeave "+from);
             }
             if(isFunction(onleaveSAll)){
-                onleaveSAll(realArguments)
+                onleaveSAll.apply(onleaveSAll,realArguments)
                 log("execute onLeaveState");
             }
             if(useAsync===false)
@@ -172,19 +172,19 @@
                 if(canContinueEvent){
                     FSMInstance.current = to
                     if(isFunction(onenterS)){
-                        onenterS(realArguments)
+                        onenterS.apply(onenterS,realArguments)
                         log("execute onEnterState "+to);
                     }
                     if(isFunction(onenterSAll)){
-                        onenterSAll(realArguments)
+                        onenterSAll.apply(onenterSAll,realArguments)
                         log("execute onEnterState");
                     }
                     if(isFunction(onafterE)){
-                        onafterE(realArguments)
+                        onafterE.apply(onafterE,realArguments)
                         log("execute onAfter "+name);
                     }
                     if(isFunction(onafterEAll)){
-                        onafterEAll(realArguments)
+                        onafterEAll.apply(onafterEAll,realArguments)
                         log("execute onAfterEvent");
                     }
                 }
